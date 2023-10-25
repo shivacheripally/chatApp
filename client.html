@@ -21,6 +21,10 @@
     <script>
         //socket code in js
         const socket = io.connect('http://127.0.0.1:8000/');
+        const userName = prompt("Enter Your Name:");
+        //emit the user name to the server
+        socket.emit("join", userName);
+
         const messageInput = document.querySelector('#message');
         const messageList = document.querySelector('.message-list');
         const sendButton = document.querySelector('.btn');
@@ -31,16 +35,16 @@
                 socket.emit('new_message', message);
 
                 const messageEle = document.createElement('div');
-                messageEle.innerText = message;
+                messageEle.innerText = userName+": "+message;
                 messageList.append(messageEle);
                 messageInput.value = ""
             }
         })
 
         //Listen for broadcast message and add it to the server
-        socket.on("broadcat_message", (message)=>{
+        socket.on("broadcat_message", (userMessage)=>{
             const messageEle = document.createElement('div');
-            messageEle.innerText = message;
+            messageEle.innerText = userMessage.username+": "+userMessage.message;
             messageList.append(messageEle);
             // messageInput.value = "" 
         })
